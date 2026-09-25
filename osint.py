@@ -21,7 +21,6 @@ class RGB:
 
     @classmethod
     def set_color(cls, name, r, g, b):
-        """Fungsi untuk mengubah warna RGB secara dinamis"""
         setattr(cls, name, f'\033[38;2;{r};{g};{b}m')
 
 def clear_screen():
@@ -36,7 +35,6 @@ def typing_print(text, speed=0.001):
 
 def print_banner():
     clear_screen()
-    # Banner menggunakan PRIMARY dan SECONDARY agar ikut berubah saat tema diganti
     banner = f"""{RGB.PRIMARY}{RGB.BOLD}
   ██████  ███████ ██ ███    ██ ████████ 
  ██    ██ ██      ██ ████   ██    ██    
@@ -47,7 +45,7 @@ def print_banner():
  ╭──────────────────────────────────────────────────────────╮
  │ [>] TOOL     : MULTI-PURPOSE OSINT RECON FRAMEWORK       │
  │ [>] CODER    : DOCTOR BARMODS (BARMODS STORE)            │
- │ [>] VERSION  : 5.1.0 (DYNAMIC RGB + FULL QUOTA ENGINE)   │
+ │ [>] VERSION  : 6.0.0 (ULTIMATE RGB + SMM PANEL EDITION)  │
  ╰──────────────────────────────────────────────────────────╯{RGB.RESET}
 """
     typing_print(banner)
@@ -65,13 +63,14 @@ def print_menu():
  {RGB.ACCENT}[09]{RGB.RESET} {RGB.WHITE}DNS Record Scanner (A, MX, TXT){RGB.RESET} 
  {RGB.ACCENT}[10]{RGB.RESET} {RGB.WHITE}WHOIS Domain Intelligence Lookup{RGB.RESET}
  {RGB.ACCENT}[11]{RGB.RESET} {RGB.WHITE}Hash & Crypto Generator (MD5/SHA256){RGB.RESET}
+ {RGB.PRIMARY}[12]{RGB.RESET} {RGB.BOLD}{RGB.WHITE}SMM Panel Integration (Pusat Panel SMM){RGB.RESET} 
  {RGB.GRAY}[99]{RGB.RESET} {RGB.ACCENT}Edit Tema Warna (RGB Settings){RGB.RESET}
  {RGB.DANGER}[00]{RGB.RESET} {RGB.DANGER}Exit Session{RGB.RESET}
 """
     print(menu)
 
 # ==========================================
-# ⚙️ KONFIGURASI ENGINE
+# ⚙️ KONFIGURASI API OSINT & SMM PANEL
 # ==========================================
 KMSP_HEADERS = {
     "Authorization": "Basic c2lkb21wdWxhcGk6YXBpZ3drbXNw",
@@ -79,6 +78,12 @@ KMSP_HEADERS = {
     "X-App-Version": "4.0.0",
     "User-Agent": "Mozilla/5.0"
 }
+
+# ⚠️ UBAH DATA SMM PANEL ANDA DI BAWAH INI
+SMM_API_URL = "https://pusatpanelsmm.com/api/json.php"  # Ganti dengan URL endpoint API yang benar jika berbeda
+SMM_API_KEY = "57356894783dbe9663b024e1c385ae2e2db3f87dab69ee4620278e35c40c5718"
+SMM_SECRET_KEY = "37ba1b616ff5bed38617d6572ea775e2c587090373509eab6386c8b671af49bf"
+
 
 def normalize_number(msisdn):
     s = re.sub(r'[\s().\-]', '', str(msisdn)).strip()
@@ -108,17 +113,11 @@ def run_color_settings():
     c = input(f"\n{RGB.SECONDARY}[?] Pilih tema (1-4): {RGB.RESET}").strip()
     
     if c == '1':
-        RGB.set_color('PRIMARY', 0, 255, 0)
-        RGB.set_color('SECONDARY', 0, 180, 0)
-        RGB.set_color('ACCENT', 200, 255, 0)
+        RGB.set_color('PRIMARY', 0, 255, 0); RGB.set_color('SECONDARY', 0, 180, 0); RGB.set_color('ACCENT', 200, 255, 0)
     elif c == '2':
-        RGB.set_color('PRIMARY', 255, 0, 150)
-        RGB.set_color('SECONDARY', 0, 255, 255)
-        RGB.set_color('ACCENT', 255, 255, 0)
+        RGB.set_color('PRIMARY', 255, 0, 150); RGB.set_color('SECONDARY', 0, 255, 255); RGB.set_color('ACCENT', 255, 255, 0)
     elif c == '3':
-        RGB.set_color('PRIMARY', 220, 20, 60)
-        RGB.set_color('SECONDARY', 150, 150, 150)
-        RGB.set_color('ACCENT', 255, 100, 100)
+        RGB.set_color('PRIMARY', 220, 20, 60); RGB.set_color('SECONDARY', 150, 150, 150); RGB.set_color('ACCENT', 255, 100, 100)
     elif c == '4':
         print(f"\n{RGB.GRAY}[!] Masukkan nilai Red,Green,Blue (0-255) dipisah koma. Contoh: 255,0,0{RGB.RESET}")
         try:
@@ -129,17 +128,138 @@ def run_color_settings():
             s = input(f"{RGB.SECONDARY}[?] Warna Garis / Teks (SECONDARY): {RGB.RESET}").strip()
             r, g, b = map(int, s.split(','))
             RGB.set_color('SECONDARY', r, g, b)
-        except Exception:
-            print(f"{RGB.DANGER}[!] Format salah, dibatalkan. Pastikan menggunakan format R,G,B{RGB.RESET}")
-            return
-    else:
-        return
-        
+        except:
+            print(f"{RGB.DANGER}[!] Format salah, dibatalkan.{RGB.RESET}"); return
+    else: return
     print(f"\n{RGB.PRIMARY}[+] Tema Terminal Berhasil Diubah!{RGB.RESET}")
     time.sleep(1)
 
 # ==========================================
-# 📡 MODUL 1 - 5 (ORIGINAL OSINT & TELCO)
+# 🛒 MODUL 12: SMM PANEL INTEGRATION
+# ==========================================
+def call_smm_api(action, **kwargs):
+    if SMM_API_KEY == "API_KEY_ANDA_DISINI":
+        print(f"{RGB.DANGER}[!] SMM_API_KEY dan SMM_SECRET_KEY belum disetting di dalam script!{RGB.RESET}")
+        return None
+    
+    payload = {
+        "api_key": SMM_API_KEY,
+        "secret_key": SMM_SECRET_KEY,
+        "action": action
+    }
+    payload.update(kwargs)
+    
+    try:
+        res = requests.post(SMM_API_URL, data=payload, timeout=20)
+        return res.json()
+    except Exception as e:
+        print(f"{RGB.DANGER}[!] Koneksi API SMM Gagal / Timeout: {e}{RGB.RESET}")
+        return None
+
+def run_smm_panel():
+    while True:
+        clear_screen()
+        print(f"{RGB.PRIMARY}{RGB.BOLD}═════════════════[ SMM PANEL MANAGER ]═════════════════{RGB.RESET}")
+        smm_menu = f"""
+ {RGB.ACCENT}[1]{RGB.RESET} Cek Profil & Saldo Akun
+ {RGB.ACCENT}[2]{RGB.RESET} Lihat Daftar Layanan (Services)
+ {RGB.ACCENT}[3]{RGB.RESET} Buat Pesanan Baru (Order)
+ {RGB.ACCENT}[4]{RGB.RESET} Cek Status Pesanan (Order Status)
+ {RGB.ACCENT}[5]{RGB.RESET} Request Refill Layanan
+ {RGB.ACCENT}[6]{RGB.RESET} Cek Status Refill
+ {RGB.DANGER}[0]{RGB.RESET} Kembali ke Menu Utama
+"""
+        print(smm_menu)
+        pilihan = input(f"{RGB.SECONDARY}[?] Pilih menu SMM: {RGB.RESET}").strip()
+
+        if pilihan == '1':
+            data = call_smm_api("profile")
+            if data:
+                if data.get("status"):
+                    d = data.get("data", {})
+                    print(f"\n{RGB.PRIMARY}[+] PROFIL SMM BERHASIL DIAMBIL{RGB.RESET}")
+                    print(f" ├─ Username : {RGB.BOLD}{d.get('username')}{RGB.RESET}")
+                    print(f" ├─ Full Name: {d.get('full_name')}")
+                    print(f" ├─ Email    : {d.get('email')}")
+                    print(f" └─ Saldo    : {RGB.ACCENT}Rp {d.get('balance')}{RGB.RESET}")
+                else:
+                    print(f"\n{RGB.DANGER}[!] Gagal: {data.get('data', {}).get('msg')}{RGB.RESET}")
+
+        elif pilihan == '2':
+            data = call_smm_api("services")
+            if data and data.get("status"):
+                services = data.get("data", [])
+                print(f"\n{RGB.PRIMARY}[+] DAFTAR LAYANAN ({len(services)} Layanan Tersedia){RGB.RESET}")
+                limit = 20
+                for s in services[:limit]:
+                    print(f" ├─ ID: {RGB.ACCENT}{s.get('id'):<4}{RGB.RESET} | Rp {s.get('price'):<5} | {s.get('name')[:45]}...")
+                if len(services) > limit:
+                    print(f" └─ {RGB.GRAY}... dan {len(services)-limit} layanan lainnya disembunyikan.{RGB.RESET}")
+            elif data:
+                print(f"\n{RGB.DANGER}[!] Gagal: {data.get('data', {}).get('msg')}{RGB.RESET}")
+
+        elif pilihan == '3':
+            print(f"\n{RGB.ACCENT}[*] PEMESANAN BARU{RGB.RESET}")
+            svc = input(f" {RGB.SECONDARY}├─ Masukkan ID Service: {RGB.RESET}").strip()
+            tgt = input(f" {RGB.SECONDARY}├─ Target (URL/Username): {RGB.RESET}").strip()
+            qty = input(f" {RGB.SECONDARY}└─ Jumlah (Quantity): {RGB.RESET}").strip()
+            
+            data = call_smm_api("order", service=svc, data=tgt, quantity=qty)
+            if data:
+                if data.get("status"):
+                    print(f"\n{RGB.PRIMARY}[+] PESANAN BERHASIL DIBUAT{RGB.RESET}")
+                    print(f" └─ Order ID : {RGB.BOLD}{data.get('data', {}).get('id')}{RGB.RESET}")
+                else:
+                    print(f"\n{RGB.DANGER}[!] Order Gagal: {data.get('data', {}).get('msg')}{RGB.RESET}")
+
+        elif pilihan == '4':
+            oid = input(f"\n{RGB.SECONDARY}[?] Masukkan Order ID: {RGB.RESET}").strip()
+            data = call_smm_api("status", id=oid)
+            if data:
+                if data.get("status"):
+                    d = data.get("data", {})
+                    print(f"\n{RGB.PRIMARY}[+] STATUS PESANAN (ID: {oid}){RGB.RESET}")
+                    print(f" ├─ Status     : {RGB.BOLD}{d.get('status')}{RGB.RESET}")
+                    print(f" ├─ Start Count: {d.get('start_count')}")
+                    print(f" └─ Remains    : {d.get('remains')}")
+                else:
+                    print(f"\n{RGB.DANGER}[!] Gagal: {data.get('data', {}).get('msg')}{RGB.RESET}")
+
+        elif pilihan == '5':
+            oid = input(f"\n{RGB.SECONDARY}[?] Masukkan Order ID yang akan di-Refill: {RGB.RESET}").strip()
+            data = call_smm_api("refill", order=oid)
+            if data:
+                if data.get("status"):
+                    d = data.get("data", [])[0] if data.get("data") else {}
+                    print(f"\n{RGB.PRIMARY}[+] REFILL BERHASIL DIREQUEST{RGB.RESET}")
+                    print(f" └─ Refill ID : {RGB.BOLD}{d.get('refill')}{RGB.RESET}")
+                else:
+                    d = data.get("data", [])[0] if data.get("data") else {}
+                    print(f"\n{RGB.DANGER}[!] Refill Gagal: {d.get('msg', 'Permintaan tidak sesuai')}{RGB.RESET}")
+
+        elif pilihan == '6':
+            rid = input(f"\n{RGB.SECONDARY}[?] Masukkan Refill ID: {RGB.RESET}").strip()
+            data = call_smm_api("refill_status", refill=rid)
+            if data:
+                if data.get("status"):
+                    d = data.get("data", [])[0] if data.get("data") else {}
+                    print(f"\n{RGB.PRIMARY}[+] STATUS REFILL (ID: {rid}){RGB.RESET}")
+                    print(f" └─ Status : {RGB.BOLD}{d.get('status')}{RGB.RESET}")
+                else:
+                    d = data.get("data", [])[0] if data.get("data") else {}
+                    print(f"\n{RGB.DANGER}[!] Gagal: {d.get('msg', 'Refill Id Tidak Ditemukan')}{RGB.RESET}")
+
+        elif pilihan == '0':
+            print(f"\n{RGB.GRAY}[*] Kembali ke menu utama...{RGB.RESET}")
+            time.sleep(0.5)
+            break
+        else:
+            print(f"{RGB.DANGER}[!] Pilihan tidak valid.{RGB.RESET}")
+
+        input(f"\n{RGB.GRAY}[Tekan ENTER untuk kembali ke Menu SMM]{RGB.RESET}")
+
+# ==========================================
+# 📡 MODUL OSINT & NET UTILS (1 - 11)
 # ==========================================
 def run_telco_recon():
     raw_num = input(f"\n{RGB.SECONDARY}[?] Masukkan Nomor Target (08xxx): {RGB.RESET}").strip()
@@ -266,9 +386,6 @@ def run_port_scanner():
     except:
         print(f"{RGB.DANGER}[!] Gagal melakukan scan port.{RGB.RESET}")
 
-# ==========================================
-# 🚀 MODUL 6 - 8 (HTTP & NET UTILS)
-# ==========================================
 def run_header_grabber():
     target = input(f"\n{RGB.SECONDARY}[?] URL Website Target: {RGB.RESET}").strip()
     if not target.startswith('http'): target = 'http://' + target
@@ -304,9 +421,6 @@ def run_url_unshortener():
     except Exception as e:
         print(f"{RGB.DANGER}[!] Tracing gagal: {e}{RGB.RESET}")
 
-# ==========================================
-# 💎 MODUL 9 - 11 (NEW FEATURES)
-# ==========================================
 def run_dns_scanner():
     target = input(f"\n{RGB.SECONDARY}[?] Masukkan Domain Target: {RGB.RESET}").strip()
     target_clean = re.sub(r'^https?://', '', target).split('/')[0]
@@ -316,15 +430,12 @@ def run_dns_scanner():
         if res.get("status") == "OK":
             records = res.get("records", {})
             print(f"\n{RGB.PRIMARY}[+] DNS RECORDS AQUIRED{RGB.RESET}")
-            
             if records.get("A"):
                 print(f" {RGB.ACCENT}├─ [A] Records (IPv4):{RGB.RESET}")
                 for r in records["A"]: print(f" │  └─ {r['address']}")
-            
             if records.get("MX"):
                 print(f" {RGB.ACCENT}├─ [MX] Mail Servers:{RGB.RESET}")
                 for r in records["MX"]: print(f" │  └─ {r['exchange']} (Priority: {r['priority']})")
-                
             if records.get("TXT"):
                 print(f" {RGB.ACCENT}└─ [TXT] Verifications:{RGB.RESET}")
                 for r in records["TXT"]: print(f"    └─ {r[:60]}...")
@@ -346,10 +457,8 @@ def run_whois_lookup():
             print(f" ├─ Registrar    : {w.get('registrar', 'Hidden')}")
             print(f" ├─ Dibuat Pada  : {w.get('creation_date', '-')}")
             print(f" ├─ Berakhir Pada: {w.get('expiration_date', '-')}")
-            
             servers = w.get("name_servers")
-            if servers:
-                print(f" └─ Name Servers : {servers[0] if servers else '-'}")
+            if servers: print(f" └─ Name Servers : {servers[0] if servers else '-'}")
         else:
             print(f"{RGB.DANGER}[!] Data WHOIS diproteksi atau tidak ditemukan.{RGB.RESET}")
     except Exception as e:
@@ -358,15 +467,10 @@ def run_whois_lookup():
 def run_hash_generator():
     text = input(f"\n{RGB.SECONDARY}[?] Masukkan Text/String: {RGB.RESET}")
     if not text: return
-    
-    md5_hash = hashlib.md5(text.encode()).hexdigest()
-    sha1_hash = hashlib.sha1(text.encode()).hexdigest()
-    sha256_hash = hashlib.sha256(text.encode()).hexdigest()
-    
     print(f"\n{RGB.PRIMARY}[+] CRYPTOGRAPHY HASH GENERATED{RGB.RESET}")
-    print(f" {RGB.ACCENT}├─ MD5   :{RGB.RESET} {md5_hash}")
-    print(f" {RGB.ACCENT}├─ SHA1  :{RGB.RESET} {sha1_hash}")
-    print(f" {RGB.ACCENT}└─ SHA256:{RGB.RESET} {sha256_hash}")
+    print(f" {RGB.ACCENT}├─ MD5   :{RGB.RESET} {hashlib.md5(text.encode()).hexdigest()}")
+    print(f" {RGB.ACCENT}├─ SHA1  :{RGB.RESET} {hashlib.sha1(text.encode()).hexdigest()}")
+    print(f" {RGB.ACCENT}└─ SHA256:{RGB.RESET} {hashlib.sha256(text.encode()).hexdigest()}")
 
 # ==========================================
 # 🔄 MAIN LOOP
@@ -389,6 +493,7 @@ def main():
             elif choice in ['9', '09']: run_dns_scanner()
             elif choice in ['10']: run_whois_lookup()
             elif choice in ['11']: run_hash_generator()
+            elif choice in ['12']: run_smm_panel()  # <--- ENTRY SMM PANEL
             elif choice in ['99']: run_color_settings()
             elif choice in ['0', '00', 'exit', 'quit']:
                 print(f"\n{RGB.ACCENT}[*] Session terminated by user.{RGB.RESET}")
