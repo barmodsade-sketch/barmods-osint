@@ -7,19 +7,22 @@ import hashlib
 import requests
 
 # ==========================================
-# 🎨 RGB TRUE COLOR ENGINE (EDIT DI SINI)
-# Format: \033[38;2;R;G;Bm
-# Ganti angka R (Red), G (Green), B (Blue) dari 0 - 255
+# 🎨 RGB TRUE COLOR ENGINE (DYNAMIC)
 # ==========================================
 class RGB:
     PRIMARY   = '\033[38;2;0;255;128m'    # Hijau Neon
-    SECONDARY = '\033[38;2;0;200;255m'    # Biru Cyan (Glassmorphism style)
+    SECONDARY = '\033[38;2;0;200;255m'    # Biru Cyan
     ACCENT    = '\033[38;2;255;180;50m'   # Kuning / Emas
     DANGER    = '\033[38;2;255;50;80m'    # Merah Terang
     WHITE     = '\033[38;2;240;240;240m'  # Putih Bersih
     GRAY      = '\033[38;2;150;150;150m'  # Abu-abu
     RESET     = '\033[0m'
     BOLD      = '\033[1m'
+
+    @classmethod
+    def set_color(cls, name, r, g, b):
+        """Fungsi untuk mengubah warna RGB secara dinamis"""
+        setattr(cls, name, f'\033[38;2;{r};{g};{b}m')
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -33,7 +36,8 @@ def typing_print(text, speed=0.001):
 
 def print_banner():
     clear_screen()
-    banner = f"""{RGB.DANGER}{RGB.BOLD}
+    # Banner menggunakan PRIMARY dan SECONDARY agar ikut berubah saat tema diganti
+    banner = f"""{RGB.PRIMARY}{RGB.BOLD}
   ██████  ███████ ██ ███    ██ ████████ 
  ██    ██ ██      ██ ████   ██    ██    
  ██    ██ ███████ ██ ██ ██  ██    ██    
@@ -43,7 +47,7 @@ def print_banner():
  ╭──────────────────────────────────────────────────────────╮
  │ [>] TOOL     : MULTI-PURPOSE OSINT RECON FRAMEWORK       │
  │ [>] CODER    : DOCTOR BARMODS (BARMODS STORE)            │
- │ [>] VERSION  : 5.0.0 (ULTIMATE RGB + FULL QUOTA ENGINE)  │
+ │ [>] VERSION  : 5.1.0 (DYNAMIC RGB + FULL QUOTA ENGINE)   │
  ╰──────────────────────────────────────────────────────────╯{RGB.RESET}
 """
     typing_print(banner)
@@ -61,6 +65,7 @@ def print_menu():
  {RGB.ACCENT}[09]{RGB.RESET} {RGB.WHITE}DNS Record Scanner (A, MX, TXT){RGB.RESET} 
  {RGB.ACCENT}[10]{RGB.RESET} {RGB.WHITE}WHOIS Domain Intelligence Lookup{RGB.RESET}
  {RGB.ACCENT}[11]{RGB.RESET} {RGB.WHITE}Hash & Crypto Generator (MD5/SHA256){RGB.RESET}
+ {RGB.GRAY}[99]{RGB.RESET} {RGB.ACCENT}Edit Tema Warna (RGB Settings){RGB.RESET}
  {RGB.DANGER}[00]{RGB.RESET} {RGB.DANGER}Exit Session{RGB.RESET}
 """
     print(menu)
@@ -91,6 +96,49 @@ def clean_html(text):
     return clean.replace("&nbsp;", " ").replace("&amp;", "&").replace("=", "").strip()
 
 # ==========================================
+# 🎨 MODUL 99: RGB THEME SETTINGS
+# ==========================================
+def run_color_settings():
+    print(f"\n{RGB.ACCENT}[*] RGB THEME EDITOR{RGB.RESET}")
+    print(f" {RGB.PRIMARY}[1]{RGB.RESET} Mode Hacker (Matrix Green)")
+    print(f" {RGB.PRIMARY}[2]{RGB.RESET} Mode Cyberpunk (Neon Pink & Cyan)")
+    print(f" {RGB.PRIMARY}[3]{RGB.RESET} Mode Dark Blood (Crimson & Gray)")
+    print(f" {RGB.PRIMARY}[4]{RGB.RESET} Custom RGB Manual")
+    
+    c = input(f"\n{RGB.SECONDARY}[?] Pilih tema (1-4): {RGB.RESET}").strip()
+    
+    if c == '1':
+        RGB.set_color('PRIMARY', 0, 255, 0)
+        RGB.set_color('SECONDARY', 0, 180, 0)
+        RGB.set_color('ACCENT', 200, 255, 0)
+    elif c == '2':
+        RGB.set_color('PRIMARY', 255, 0, 150)
+        RGB.set_color('SECONDARY', 0, 255, 255)
+        RGB.set_color('ACCENT', 255, 255, 0)
+    elif c == '3':
+        RGB.set_color('PRIMARY', 220, 20, 60)
+        RGB.set_color('SECONDARY', 150, 150, 150)
+        RGB.set_color('ACCENT', 255, 100, 100)
+    elif c == '4':
+        print(f"\n{RGB.GRAY}[!] Masukkan nilai Red,Green,Blue (0-255) dipisah koma. Contoh: 255,0,0{RGB.RESET}")
+        try:
+            p = input(f"{RGB.SECONDARY}[?] Warna Utama / Banner (PRIMARY): {RGB.RESET}").strip()
+            r, g, b = map(int, p.split(','))
+            RGB.set_color('PRIMARY', r, g, b)
+            
+            s = input(f"{RGB.SECONDARY}[?] Warna Garis / Teks (SECONDARY): {RGB.RESET}").strip()
+            r, g, b = map(int, s.split(','))
+            RGB.set_color('SECONDARY', r, g, b)
+        except Exception:
+            print(f"{RGB.DANGER}[!] Format salah, dibatalkan. Pastikan menggunakan format R,G,B{RGB.RESET}")
+            return
+    else:
+        return
+        
+    print(f"\n{RGB.PRIMARY}[+] Tema Terminal Berhasil Diubah!{RGB.RESET}")
+    time.sleep(1)
+
+# ==========================================
 # 📡 MODUL 1 - 5 (ORIGINAL OSINT & TELCO)
 # ==========================================
 def run_telco_recon():
@@ -102,7 +150,6 @@ def run_telco_recon():
 
     print(f"{RGB.ACCENT}[*] Penetrasi data target {msisdn}...{RGB.RESET}")
     
-    # --- ENGINE 1: BENDITH ---
     try:
         url_bendith = f"https://bendith.my.id/end.php?check=package&number={msisdn}&version=2"
         b_res = requests.get(url_bendith, timeout=12).json()
@@ -127,7 +174,6 @@ def run_telco_recon():
     except:
         pass
 
-    # --- ENGINE 2: KMSP FALLBACK ---
     print(f"{RGB.ACCENT}[*] Rerouting payload ke KMSP Engine...{RGB.RESET}")
     try:
         url_kmsp = "https://apigw.kmsp-store.com/sidompul/v4/cek_kuota"
@@ -271,17 +317,14 @@ def run_dns_scanner():
             records = res.get("records", {})
             print(f"\n{RGB.PRIMARY}[+] DNS RECORDS AQUIRED{RGB.RESET}")
             
-            # A Records
             if records.get("A"):
                 print(f" {RGB.ACCENT}├─ [A] Records (IPv4):{RGB.RESET}")
                 for r in records["A"]: print(f" │  └─ {r['address']}")
             
-            # MX Records
             if records.get("MX"):
                 print(f" {RGB.ACCENT}├─ [MX] Mail Servers:{RGB.RESET}")
                 for r in records["MX"]: print(f" │  └─ {r['exchange']} (Priority: {r['priority']})")
                 
-            # TXT Records
             if records.get("TXT"):
                 print(f" {RGB.ACCENT}└─ [TXT] Verifications:{RGB.RESET}")
                 for r in records["TXT"]: print(f"    └─ {r[:60]}...")
@@ -346,6 +389,7 @@ def main():
             elif choice in ['9', '09']: run_dns_scanner()
             elif choice in ['10']: run_whois_lookup()
             elif choice in ['11']: run_hash_generator()
+            elif choice in ['99']: run_color_settings()
             elif choice in ['0', '00', 'exit', 'quit']:
                 print(f"\n{RGB.ACCENT}[*] Session terminated by user.{RGB.RESET}")
                 break
