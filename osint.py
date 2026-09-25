@@ -43,9 +43,9 @@ def print_banner():
   ██████  ███████ ██ ██   ████    ██    
 {RGB.SECONDARY}
  ╭──────────────────────────────────────────────────────────╮
- │ [>] TOOL     : MULTI-PURPOSE OSINT RECON FRAMEWORK                 │
- │ [>]DEV        : DOCTOR BARMODS                                     │
- │ [>] VERSION  : 1.0.0                                               │
+ │ [>] TOOL     : MULTI-PURPOSE OSINT RECON FRAMEWORK            │
+ │ [>]DEV        : DOCTOR BARMODS                                │
+ │ [>] VERSION  : 1.0.0                                          │
  ╰──────────────────────────────────────────────────────────╯{RGB.RESET}
 """
     typing_print(banner)
