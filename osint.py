@@ -44,15 +44,15 @@ def print_banner():
 {RGB.SECONDARY}
  ╭──────────────────────────────────────────────────────────╮
  │ [>] TOOL     : MULTI-PURPOSE OSINT RECON FRAMEWORK       │
- │ [>] CODER    : DOCTOR BARMODS (BARMODS STORE)            │
- │ [>] VERSION  : 6.2.1 (RGB + SMM PAGINATION & SEARCH)     │
+ │ [>]DEV        : DOCTOR BARMODS                                   │
+ │ [>] VERSION  : 1.0.0                                                  │
  ╰──────────────────────────────────────────────────────────╯{RGB.RESET}
 """
     typing_print(banner)
 
 def print_menu():
     menu = f"""{RGB.ACCENT}[ MENU SELECTION ]{RGB.RESET}
- {RGB.PRIMARY}[01]{RGB.RESET} {RGB.WHITE}XL / Axis Telco & Kuota Tracer (Full Info){RGB.RESET}
+ {RGB.PRIMARY}[01]{RGB.RESET} {RGB.WHITE}CEK KUOTA DAN NOMOR XL AXIS{RGB.RESET}
  {RGB.PRIMARY}[02]{RGB.RESET} {RGB.WHITE}IP & Domain Geolocation / ASN Lookup{RGB.RESET}
  {RGB.PRIMARY}[03]{RGB.RESET} {RGB.WHITE}Subdomain Certificate Recon (crt.sh){RGB.RESET}
  {RGB.PRIMARY}[04]{RGB.RESET} {RGB.WHITE}GitHub Target Intelligence{RGB.RESET}
@@ -63,7 +63,7 @@ def print_menu():
  {RGB.ACCENT}[09]{RGB.RESET} {RGB.WHITE}DNS Record Scanner (A, MX, TXT){RGB.RESET} 
  {RGB.ACCENT}[10]{RGB.RESET} {RGB.WHITE}WHOIS Domain Intelligence Lookup{RGB.RESET}
  {RGB.ACCENT}[11]{RGB.RESET} {RGB.WHITE}Hash & Crypto Generator (MD5/SHA256){RGB.RESET}
- {RGB.PRIMARY}[12]{RGB.RESET} {RGB.BOLD}{RGB.WHITE}SMM Panel Integration (Pusat Panel SMM){RGB.RESET} 
+ {RGB.PRIMARY}[12]{RGB.RESET} {RGB.BOLD}{RGB.WHITE}SUNTIK SOSMED{RGB.RESET} 
  {RGB.GRAY}[99]{RGB.RESET} {RGB.ACCENT}Edit Tema Warna (RGB Settings){RGB.RESET}
  {RGB.DANGER}[00]{RGB.RESET} {RGB.DANGER}Exit Session{RGB.RESET}
 """
@@ -158,7 +158,7 @@ def call_smm_api(action, **kwargs):
 def run_smm_panel():
     while True:
         clear_screen()
-        print(f"{RGB.PRIMARY}{RGB.BOLD}═════════════════[ SMM PANEL MANAGER ]═════════════════{RGB.RESET}")
+        print(f"{RGB.PRIMARY}{RGB.BOLD}═════════════════[ SUNTIK SOSMED BY DOCTOR BARMODS ]═════════════════{RGB.RESET}")
         smm_menu = f"""
  {RGB.ACCENT}[1]{RGB.RESET} Cek Profil & Saldo Akun
  {RGB.ACCENT}[2]{RGB.RESET} Lihat Daftar Layanan (Dashboard Pages & Search)
