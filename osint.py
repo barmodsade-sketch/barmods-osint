@@ -80,9 +80,9 @@ KMSP_HEADERS = {
 }
 
 # ⚠️ UBAH DATA SMM PANEL ANDA DI BAWAH INI
-SMM_API_URL = "https://pusatpanelsmm.com/api/v2"  
-SMM_API_KEY = "API_KEY_ANDA_DISINI"
-SMM_SECRET_KEY = "SECRET_KEY_ANDA_DISINI"
+SMM_API_URL = "https://pusatpanelsmm.com/api/json.php"  
+SMM_API_KEY = "57356894783dbe9663b024e1c385ae2e2db3f87dab69ee4620278e35c40c5718"
+SMM_SECRET_KEY = "37ba1b616ff5bed38617d6572ea775e2c587090373509eab6386c8b671af49bf"
 
 def normalize_number(msisdn):
     s = re.sub(r'[\s().\-]', '', str(msisdn)).strip()
