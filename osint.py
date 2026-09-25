@@ -45,7 +45,7 @@ def print_banner():
  ╭──────────────────────────────────────────────────────────╮
  │ [>] TOOL     : MULTI-PURPOSE OSINT RECON FRAMEWORK       │
  │ [>] CODER    : DOCTOR BARMODS (BARMODS STORE)            │
- │ [>] VERSION  : 6.0.0 (ULTIMATE RGB + SMM PANEL EDITION)  │
+ │ [>] VERSION  : 6.1.0 (ULTIMATE RGB + SMM PAGINATION)     │
  ╰──────────────────────────────────────────────────────────╯{RGB.RESET}
 """
     typing_print(banner)
@@ -80,7 +80,7 @@ KMSP_HEADERS = {
 }
 
 # ⚠️ UBAH DATA SMM PANEL ANDA DI BAWAH INI
-SMM_API_URL = "https://pusatpanelsmm.com/api/json.php"  # Ganti dengan URL endpoint API yang benar jika berbeda
+SMM_API_URL = "https://pusatpanelsmm.com/api/json.php"  
 SMM_API_KEY = "57356894783dbe9663b024e1c385ae2e2db3f87dab69ee4620278e35c40c5718"
 SMM_SECRET_KEY = "37ba1b616ff5bed38617d6572ea775e2c587090373509eab6386c8b671af49bf"
 
@@ -162,7 +162,7 @@ def run_smm_panel():
         print(f"{RGB.PRIMARY}{RGB.BOLD}═════════════════[ SMM PANEL MANAGER ]═════════════════{RGB.RESET}")
         smm_menu = f"""
  {RGB.ACCENT}[1]{RGB.RESET} Cek Profil & Saldo Akun
- {RGB.ACCENT}[2]{RGB.RESET} Lihat Daftar Layanan (Services)
+ {RGB.ACCENT}[2]{RGB.RESET} Lihat Daftar Layanan (Dashboard Pages)
  {RGB.ACCENT}[3]{RGB.RESET} Buat Pesanan Baru (Order)
  {RGB.ACCENT}[4]{RGB.RESET} Cek Status Pesanan (Order Status)
  {RGB.ACCENT}[5]{RGB.RESET} Request Refill Layanan
@@ -189,12 +189,55 @@ def run_smm_panel():
             data = call_smm_api("services")
             if data and data.get("status"):
                 services = data.get("data", [])
-                print(f"\n{RGB.PRIMARY}[+] DAFTAR LAYANAN ({len(services)} Layanan Tersedia){RGB.RESET}")
-                limit = 20
-                for s in services[:limit]:
-                    print(f" ├─ ID: {RGB.ACCENT}{s.get('id'):<4}{RGB.RESET} | Rp {s.get('price'):<5} | {s.get('name')[:45]}...")
-                if len(services) > limit:
-                    print(f" └─ {RGB.GRAY}... dan {len(services)-limit} layanan lainnya disembunyikan.{RGB.RESET}")
+                total_services = len(services)
+                items_per_page = 10
+                total_pages = (total_services + items_per_page - 1) // items_per_page
+                current_page = 0
+                
+                # Sistem Dashboard Paginasi Interaktif
+                while True:
+                    clear_screen()
+                    print(f"\n{RGB.PRIMARY}[+] DAFTAR LAYANAN SMM (Total: {total_services} | Hal: {current_page+1}/{total_pages}){RGB.RESET}")
+                    print(f"{RGB.GRAY} ID    | Harga    | Nama Layanan{RGB.RESET}")
+                    print(f"{RGB.GRAY} ──────┼──────────┼──────────────────────────────────────────────────{RGB.RESET}")
+                    
+                    start_idx = current_page * items_per_page
+                    end_idx = start_idx + items_per_page
+                    
+                    for s in services[start_idx:end_idx]:
+                        s_id = str(s.get('id', ''))
+                        s_price = f"Rp{s.get('price', '')}"
+                        s_name = str(s.get('name', ''))
+                        
+                        # Potong nama jika terlalu panjang agar tidak merusak tampilan terminal
+                        if len(s_name) > 48: s_name = s_name[:45] + "..."
+                        
+                        print(f" {RGB.ACCENT}{s_id:<5}{RGB.RESET} | {RGB.WHITE}{s_price:<8}{RGB.RESET} | {s_name}")
+                    
+                    print(f"{RGB.GRAY} ──────┴──────────┴──────────────────────────────────────────────────{RGB.RESET}")
+                    print(f" {RGB.ACCENT}[N]{RGB.RESET} Next Page   {RGB.ACCENT}[P]{RGB.RESET} Prev Page   {RGB.DANGER}[Q]{RGB.RESET} Quit List")
+                    
+                    nav = input(f"\n{RGB.SECONDARY}[?] Navigasi (N/P/Q): {RGB.RESET}").strip().lower()
+                    
+                    if nav == 'n':
+                        if current_page < total_pages - 1:
+                            current_page += 1
+                        else:
+                            print(f"{RGB.DANGER}[!] Ini adalah halaman terakhir.{RGB.RESET}")
+                            time.sleep(1)
+                    elif nav == 'p':
+                        if current_page > 0:
+                            current_page -= 1
+                        else:
+                            print(f"{RGB.DANGER}[!] Ini adalah halaman pertama.{RGB.RESET}")
+                            time.sleep(1)
+                    elif nav == 'q':
+                        break
+                    else:
+                        print(f"{RGB.DANGER}[!] Input tidak valid.{RGB.RESET}")
+                        time.sleep(0.5)
+                continue # Melewati instruksi "Tekan ENTER" agar langsung kembali ke menu SMM
+            
             elif data:
                 print(f"\n{RGB.DANGER}[!] Gagal: {data.get('data', {}).get('msg')}{RGB.RESET}")
 
@@ -493,7 +536,7 @@ def main():
             elif choice in ['9', '09']: run_dns_scanner()
             elif choice in ['10']: run_whois_lookup()
             elif choice in ['11']: run_hash_generator()
-            elif choice in ['12']: run_smm_panel()  # <--- ENTRY SMM PANEL
+            elif choice in ['12']: run_smm_panel() 
             elif choice in ['99']: run_color_settings()
             elif choice in ['0', '00', 'exit', 'quit']:
                 print(f"\n{RGB.ACCENT}[*] Session terminated by user.{RGB.RESET}")
